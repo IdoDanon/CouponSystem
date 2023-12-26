@@ -4,10 +4,23 @@ This README provides an overview and documentation for the microservices that co
 
 ## Microservices Overview
 
-1. [AuthForge Authentication](#authforge-authentication)
-2. [CouponHub Microservice](#couponhub-microservice)
-3. [CustomerConnect Microservice](#customerconnect-microservice)
-4. [RouteLocator Microservice](#routelocator-microservice)
+1. [Archimedes Eureka Server](#archimedes-eureka-server)
+2. [AuthForge Authentication](#authforge-authentication)
+3. [CouponHub Microservice](#couponhub-microservice)
+4. [CustomerConnect Microservice](#customerconnect-microservice)
+5. [RouteLocator Microservice](#routelocator-microservice)
+
+---
+
+## Archimedes Eureka Server
+
+The Archimedes Eureka Server is a Spring Cloud Eureka Server, serving as a centralized registry for microservices in a distributed system. It enables service discovery, allowing microservices to register and locate each other dynamically.
+
+### What It Does
+
+- **Service Discovery:** Provides a central location for microservices to register and discover each other.
+- **Dynamic Registration:** Allows microservices to dynamically register themselves as they start up.
+- **Status Monitoring:** Monitors the health and status of registered microservices.
 
 ---
 
@@ -25,6 +38,42 @@ The AuthForge Authentication microservice handles user authentication and author
 ### Guides
 
 - [Service Registration and Discovery with Eureka and Spring Cloud](https://spring.io/guides/gs/service-registration-and-discovery/)
+
+### Endpoints
+
+#### 1. Sign Up
+
+- **Endpoint:** `POST /sign-up`
+- **Description:** Register a new user with the provided username and password.
+- **Request Body:** SignUpRequest containing username and password.
+- **Response:** Returns a success status if the signup is successful.
+
+#### 2. Login
+
+- **Endpoint:** `POST /login`
+- **Description:** Authenticate a user and generate an authentication token.
+- **Request Body:** LoginRequest containing username and password.
+- **Response:** Returns the generated authentication token.
+
+#### 3. Parse Token
+
+- **Endpoint:** `GET /parse-token`
+- **Description:** Parse the provided authentication token and retrieve user details.
+- **Request Header:** Authorization token for user authentication.
+- **Response:** Returns the UserDto containing user details.
+
+### Exception Handling
+
+- **AuthException:** Thrown during the login process if authentication fails.
+
+### Dependencies
+
+The microservice relies on the following dependencies:
+- Spring Boot
+- Spring Boot Starter Data JPA
+- Lombok
+- MySQL Driver
+- Eureka Client
 
 ---
 
@@ -184,4 +233,100 @@ The microservice relies on the following dependencies:
 - Spring Boot
 - Spring Boot Starter Data JPA
 - Lombok
-- MySQL
+- MySQL Driver
+- Eureka Client
+
+---
+
+## RouteLocator Microservice
+
+The RouteLocator microservice is responsible for managing and configuring routes for a Gateway service. It utilizes Spring Cloud Gateway to define and map routes to downstream services.
+
+### Table of Contents
+
+1. [Introduction](#introduction)
+2. [Route Configuration](#route-configuration)
+    - [1. Get Coupon By UUID](#1-get-coupon-by-uuid)
+    - [2. Get Customer Coupons](#2-get-customer-coupons)
+    - [3. Get Company Coupons](#3-get-company-coupons)
+    - [4. Purchase Coupon](#4-purchase-coupon)
+    - [5. New Customer](#5-new-customer)
+    - [6. Customer Details](#6-customer-details)
+    - [7. All Customers](#7-all-customers)
+    - [8. Update Customer Details](#8-update-customer-details)
+    - [9. Delete Customer](#9-delete-customer)
+3. [Dependencies](#dependencies)
+
+### Introduction
+
+The RouteLocator microservice utilizes Spring Cloud Gateway to define and manage routes for various downstream services. It allows for the effective handling of HTTP requests by routing them to the appropriate services based on specific path patterns.
+
+### Route Configuration
+
+#### 1. Get Coupon By UUID
+
+- **Path Pattern:** `/coupon/**`
+- **Rewrite From:** `/coupon/(?<uuid>.*)`
+- **Rewrite To:** `/api/coupons/${uuid}`
+- **Destination Service:** `coupon-hub`
+
+#### 2. Get Customer Coupons
+
+- **Path Pattern:** `/coupon/customer`
+- **Rewrite From:** `/coupon/customer`
+- **Rewrite To:** `/api/coupons/customer`
+- **Destination Service:** `coupon-hub`
+
+#### 3. Get Company Coupons
+
+- **Path Pattern:** `/coupon/company/**`
+- **Rewrite From:** `/coupon/company/(?<uuid>.*)`
+- **Rewrite To:** `/api/coupons/company/${uuid}`
+- **Destination Service:** `coupon-hub`
+
+#### 4. Purchase Coupon
+
+- **Path Pattern:** `/coupon/purchase/**`
+- **Rewrite From:** `/coupon/purchase(?<uuid>.*)`
+- **Rewrite To:** `/api/coupons/purchase/${uuid}`
+- **Destination Service:** `coupon-hub`
+
+#### 5. New Customer
+
+- **Path Pattern:** `/customer/new`
+- **Rewrite From:** `/customer/new`
+- **Rewrite To:** `/api/customers/new`
+- **Destination Service:** `customer-connect`
+
+#### 6. Customer Details
+
+- **Path Pattern:** `/customer/details`
+- **Rewrite From:** `/customer/details`
+- **Rewrite To:** `/api/customers/details`
+- **Destination Service:** `customer-connect`
+
+#### 7. All Customers
+
+- **Path Pattern:** `/customers/all`
+- **Rewrite From:** `/customers/all`
+- **Rewrite To:** `/api/customers/all`
+- **Destination Service:** `customer-connect`
+
+#### 8. Update Customer Details
+
+- **Path Pattern:** `/customer/update`
+- **Rewrite From:** `/customer/update`
+- **Rewrite To:** `/api/customers/update`
+- **Destination Service:** `customer-connect`
+
+#### 9. Delete Customer
+
+- **Path Pattern:** `/customer/delete`
+- **Rewrite From:** `/customer/update`
+- **Rewrite To:** `/api/customers/delete`
+- **Destination Service:** `customer-connect`
+
+### Dependencies
+
+The microservice relies on the following dependencies:
+- Spring Cloud Gateway
