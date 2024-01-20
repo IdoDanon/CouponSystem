@@ -1,17 +1,3 @@
-# Unified App README
-
-This README provides an overview and documentation for the microservices that collectively constitute the Unified App. Each microservice focuses on specific functionalities within the larger system.
-
-## Microservices Overview
-
-1. [Archimedes Eureka Server](#archimedes-eureka-server)
-2. [AuthForge Authentication](#authforge-authentication)
-3. [CouponHub Microservice](#couponhub-microservice)
-4. [CustomerConnect Microservice](#customerconnect-microservice)
-5. [RouteLocator Microservice](#routelocator-microservice)
-
----
-
 ## Archimedes Eureka Server
 
 The Archimedes Eureka Server is a Spring Cloud Eureka Server, serving as a centralized registry for microservices in a distributed system. It enables service discovery, allowing microservices to register and locate each other dynamically.
